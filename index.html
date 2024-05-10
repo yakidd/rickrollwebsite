@@ -3,20 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rickroll Prank</title>
+  <title>aproductofboredom</title>
   <style>
     body {
       margin: 0;
       overflow: hidden;
       background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%; /* Adjust width as needed */
+      height: auto;
+      z-index: 1; /* Ensure the video is in front of the canvas */
     }
     canvas {
-      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0; /* Ensure the canvas is behind the video */
     }
   </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <div id="container">
+    <canvas id="canvas"></canvas>
+    <video controls autoplay="autoplay" playsinlineeeeee loop="loop" name="rickrolled" type="video/mp4"> 
+      <source src="https://dn720407.ca.archive.org/0/items/rick-roll/Rick%20Roll.mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');

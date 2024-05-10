@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rickroll Prank</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size to fill the entire window
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Create an array to store the particles
+    const particles = [];
+
+    // Function to create a particle
+    function createParticle() {
+      const particle = {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 6 + 1,
+        color: getRandomColor(),
+        speedX: Math.random() * 4 - 2, // Randomize speed in x direction
+        speedY: Math.random() * 4 - 2, // Randomize speed in y direction
+      };
+      particles.push(particle);
+    }
+
+    // Function to generate random color in shades of cyan, turquoise, and blue
+    function getRandomColor() {
+      const colors = [
+        'rgba(0, 255, 255, 0.5)',  // Cyan
+        'rgba(64, 224, 208, 0.5)', // Turquoise
+        'rgba(30, 144, 255, 0.5)'  // Dodger Blue
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Function to animate the particles
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(particle => {
+        // Update particle position with slight randomness
+        particle.x += particle.speedX + (Math.random() - 0.5) * 0.5;
+        particle.y += particle.speedY + (Math.random() - 0.5) * 0.5;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        // Check for boundary collision and adjust speed to create bouncing effect
+        if (particle.x + particle.radius > canvas.width || particle.x - particle.radius < 0) {
+          particle.speedX = -particle.speedX;
+        }
+        if (particle.y + particle.radius > canvas.height || particle.y - particle.radius < 0) {
+          particle.speedY = -particle.speedY;
+        }
+      });
+    }
+
+    // Create initial particles
+    for (let i = 0; i < 150; i++) {
+      createParticle();
+    }
+
+    // Start animation
+    animate();
+  </script>
+</body>
+</html>

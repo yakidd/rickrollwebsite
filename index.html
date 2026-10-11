@@ -2,117 +2,254 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>aproductofboredom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>📸 Shared album</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#14151a">
+
+  <!-- Link-preview bait (WhatsApp, iMessage, Messenger, Slack, Discord) -->
+  <meta name="description" content="24 photos shared with you. Tap to view the album.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Shared album">
+  <meta property="og:title" content="📸 24 photos shared with you">
+  <meta property="og:description" content="Tap to view the album">
+  <meta property="og:url" content="https://aproductofboredom.uk/">
+  <meta property="og:image" content="https://aproductofboredom.uk/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="📸 24 photos shared with you">
+  <meta name="twitter:description" content="Tap to view the album">
+  <meta name="twitter:image" content="https://aproductofboredom.uk/og.jpg">
+
   <style>
+    :root {
+      --bg: #14151a;
+      --card: #1e2028;
+      --text: #f2f3f5;
+      --muted: #9a9daa;
+      --accent: #4f8cff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
     body {
-      margin: 0;
-      overflow: hidden;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
+
+    /* ---------- Bait: shared album ---------- */
+    #bait { max-width: 960px; margin: 0 auto; padding: 20px 16px 40px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .avatar {
+      width: 44px; height: 44px; border-radius: 50%; flex: none;
+      display: grid; place-items: center; font-weight: 700; font-size: 18px;
+      background: linear-gradient(135deg, #f2994a, #eb5757);
     }
-    video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50%; /* Adjust width as needed */
-      height: auto;
-      z-index: 1; /* Ensure the video is in front of the canvas */
+    h1 { font-size: 22px; margin: 0; }
+    .meta { color: var(--muted); font-size: 14px; }
+    .grid {
+      display: grid; gap: 4px; border-radius: 14px; overflow: hidden;
+      grid-template-columns: repeat(3, 1fr);
     }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0; /* Ensure the canvas is behind the video */
+    @media (min-width: 640px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    .tile {
+      aspect-ratio: 1; border: 0; padding: 0; cursor: pointer; position: relative;
+      overflow: hidden; background: var(--card);
+    }
+    .tile span {
+      position: absolute; inset: -12px;
+      filter: blur(9px) saturate(1.2);
+    }
+    .tile.video::after {
+      content: "▶"; position: absolute; inset: 0; display: grid; place-items: center;
+      font-size: 30px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.5);
+    }
+    .cta-wrap {
+      position: sticky; bottom: 0; padding: 18px 0 max(18px, env(safe-area-inset-bottom));
+      background: linear-gradient(transparent, var(--bg) 40%);
+    }
+    .cta {
+      display: block; width: 100%; max-width: 420px; margin: 0 auto;
+      padding: 16px; border: 0; border-radius: 12px; cursor: pointer;
+      background: var(--accent); color: #fff; font-family: inherit; font-size: 17px; font-weight: 600;
+      box-shadow: 0 6px 24px rgba(79, 140, 255, .35);
+    }
+    .cta:active { transform: scale(.98); }
+    .lock { text-align: center; color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+    /* ---------- Payload ---------- */
+    #payload { position: fixed; inset: 0; background: #000; display: none; z-index: 10; }
+    #payload.on { display: block; }
+    #fx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+    #rick, #yt {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+      object-fit: contain; background: #000; z-index: 1;
+    }
+    #yt { display: none; }
+    #gotcha {
+      position: absolute; left: 50%; bottom: max(24px, env(safe-area-inset-bottom));
+      transform: translateX(-50%); z-index: 3; text-align: center;
+      opacity: 0; transition: opacity .6s; pointer-events: none;
+    }
+    #gotcha.on { opacity: 1; pointer-events: auto; }
+    #gotcha p {
+      margin: 0 0 10px; font-size: clamp(20px, 5vw, 36px); font-weight: 800;
+      text-shadow: 0 2px 12px #000;
+    }
+    #gotcha button {
+      padding: 12px 20px; border: 0; border-radius: 999px; cursor: pointer;
+      background: #fff; color: #000; font-family: inherit; font-size: 15px; font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <canvas id="canvas"></canvas>
-    <video controls autoplay="autoplay" playsinlineeeeee loop="loop" name="rickrolled" type="video/mp4"> 
-      <source src="https://dn720407.ca.archive.org/0/items/rick-roll/Rick%20Roll.mp4">
-      Your browser does not support the video tag.
+  <main id="bait">
+    <header>
+      <div class="avatar" id="initial">?</div>
+      <div>
+        <h1 id="album">Family photos</h1>
+        <div class="meta"><span id="from">Someone</span> shared <span id="count">24</span> items with you</div>
+      </div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="cta-wrap">
+      <button class="cta" id="open">View album</button>
+      <div class="lock">🔒 Shared privately: only people with the link can view</div>
+    </div>
+  </main>
+
+  <section id="payload" aria-hidden="true">
+    <video id="rick" playsinline webkit-playsinline loop preload="auto">
+      <source src="https://archive.org/download/rick-roll/Rick%20Roll.mp4" type="video/mp4">
+      <source src="https://dn720407.ca.archive.org/0/items/rick-roll/Rick%20Roll.mp4" type="video/mp4">
     </video>
-  </div>
+    <iframe id="yt" title="video" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+    <canvas id="fx"></canvas>
+    <div id="gotcha">
+      <p>You just got rickrolled 🕺</p>
+      <button id="share">Pass it on</button>
+    </div>
+  </section>
+
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    // ---- Personalise the bait via URL: ?from=Mum&album=Christmas%202026&n=37
+    const q = new URLSearchParams(location.search);
+    const from = (q.get('from') || 'Someone').slice(0, 30);
+    const album = (q.get('album') || 'Family photos').slice(0, 50);
+    const count = Math.min(Math.max(parseInt(q.get('n'), 10) || 24, 4), 99);
 
-    // Set canvas size to fill the entire window
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    document.getElementById('from').textContent = from;
+    document.getElementById('album').textContent = album;
+    document.getElementById('count').textContent = count;
+    document.getElementById('initial').textContent = from[0].toUpperCase();
+    document.title = '📸 ' + album;
 
-    // Create an array to store the particles
-    const particles = [];
-
-    // Function to create a particle
-    function createParticle() {
-      const particle = {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 6 + 1,
-        color: getRandomColor(),
-        speedX: Math.random() * 4 - 2, // Randomize speed in x direction
-        speedY: Math.random() * 4 - 2, // Randomize speed in y direction
-      };
-      particles.push(particle);
+    // ---- Blurred "thumbnails": random gradients, a couple flagged as videos
+    const palette = ['#f2994a', '#eb5757', '#56ccf2', '#6fcf97', '#bb6bd9', '#f2c94c', '#2f80ed', '#e0a387', '#8d6e63'];
+    const pick = () => palette[Math.floor(Math.random() * palette.length)];
+    const grid = document.getElementById('grid');
+    // 12 fills both the 3- and 4-column layouts with no orphans
+    for (let i = 0; i < Math.min(count, 12); i++) {
+      const b = document.createElement('button');
+      b.className = 'tile' + (i === 2 || i === 7 ? ' video' : '');
+      b.setAttribute('aria-label', 'Photo ' + (i + 1));
+      const bg = document.createElement('span');
+      bg.style.background =
+        `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, ${pick()} 0 22%, transparent 45%),` +
+        `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, ${pick()} 0 30%, transparent 55%),` +
+        `linear-gradient(${Math.random() * 360}deg, ${pick()}, ${pick()})`;
+      b.appendChild(bg);
+      grid.appendChild(b);
     }
 
-    // Function to generate random color in shades of cyan, turquoise, and blue
-    function getRandomColor() {
-      const colors = [
-        'rgba(0, 255, 255, 0.5)',  // Cyan
-        'rgba(64, 224, 208, 0.5)', // Turquoise
-        'rgba(30, 144, 255, 0.5)'  // Dodger Blue
-      ];
-      return colors[Math.floor(Math.random() * colors.length)];
+    // ---- The rickroll
+    const payload = document.getElementById('payload');
+    const video = document.getElementById('rick');
+    const yt = document.getElementById('yt');
+    let sprung = false;
+
+    function useYouTube() {
+      if (yt.src) return;
+      video.pause();
+      video.style.display = 'none';
+      yt.style.display = 'block';
+      yt.src = 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&loop=1&playlist=dQw4w9WgXcQ&playsinline=1&rel=0&modestbranding=1';
     }
 
-    // Function to animate the particles
-    function animate() {
-      requestAnimationFrame(animate);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function spring() {
+      if (sprung) return;
+      sprung = true;
 
-      particles.forEach(particle => {
-        // Update particle position with slight randomness
-        particle.x += particle.speedX + (Math.random() - 0.5) * 0.5;
-        particle.y += particle.speedY + (Math.random() - 0.5) * 0.5;
+      payload.classList.add('on');
+      payload.removeAttribute('aria-hidden');
+      document.title = 'Never gonna give you up';
 
-        // Draw particle
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
-        ctx.fill();
+      // play() must run synchronously inside the click so browsers allow sound
+      video.muted = false;
+      video.volume = 1;
+      const p = video.play();
+      if (p && p.catch) p.catch(useYouTube);
+      // with <source> children, failure fires on the last source, not the video
+      video.querySelector('source:last-of-type').addEventListener('error', useYouTube, { once: true });
+      // and a stalled load never rejects, so give it a deadline
+      setTimeout(() => { if (video.currentTime === 0 && video.style.display !== 'none') useYouTube(); }, 5000);
+      // no "pause to escape"
+      video.addEventListener('pause', () => { if (!video.ended && video.style.display !== 'none') video.play().catch(() => {}); });
 
-        // Check for boundary collision and adjust speed to create bouncing effect
-        if (particle.x + particle.radius > canvas.width || particle.x - particle.radius < 0) {
-          particle.speedX = -particle.speedX;
+      const fs = payload.requestFullscreen || payload.webkitRequestFullscreen;
+      if (fs) { try { const r = fs.call(payload); if (r && r.catch) r.catch(() => {}); } catch (_) {} }
+      if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+
+      confetti();
+      setTimeout(() => document.getElementById('gotcha').classList.add('on'), 4000);
+    }
+
+    document.getElementById('bait').addEventListener('click', e => {
+      if (e.target.closest('button')) spring();
+    });
+
+    document.getElementById('share').addEventListener('click', async () => {
+      const url = location.origin + location.pathname;
+      try {
+        if (navigator.share) await navigator.share({ title: '📸 Photos shared with you', url });
+        else { await navigator.clipboard.writeText(url); alert('Link copied. Go get someone.'); }
+      } catch (_) {}
+    });
+
+    // ---- Confetti burst on the reveal
+    function confetti() {
+      const c = document.getElementById('fx');
+      const ctx = c.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const size = () => { c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+      size();
+      addEventListener('resize', size);
+
+      const parts = Array.from({ length: 220 }, () => ({
+        x: innerWidth / 2, y: innerHeight / 2,
+        vx: (Math.random() - .5) * 18, vy: Math.random() * -18 - 4,
+        w: 6 + Math.random() * 6, h: 4 + Math.random() * 4,
+        r: Math.random() * Math.PI, vr: (Math.random() - .5) * .3,
+        color: pick(),
+      }));
+      const end = performance.now() + 5000;
+
+      (function frame(t) {
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        for (const p of parts) {
+          p.vy += .45; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+          ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
         }
-        if (particle.y + particle.radius > canvas.height || particle.y - particle.radius < 0) {
-          particle.speedY = -particle.speedY;
-        }
-      });
+        if (t < end) requestAnimationFrame(frame);
+        else ctx.clearRect(0, 0, innerWidth, innerHeight);
+      })(performance.now());
     }
-
-    // Create initial particles
-    for (let i = 0; i < 150; i++) {
-      createParticle();
-    }
-
-    // Start animation
-    animate();
   </script>
 </body>
 </html>

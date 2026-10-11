@@ -2,117 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>aproductofboredom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>From hospital IT to the SOC | Yakub</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Link-preview bait (WhatsApp, iMessage, Messenger, Slack, LinkedIn, Discord) -->
+  <meta name="description" content="How a decade of healthcare IT turned into building an AI-assisted security operations centre. Plus a 2-minute demo.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="aproductofboredom">
+  <meta property="og:title" content="From hospital IT to the SOC: how I ended up building an AI security analyst">
+  <meta property="og:description" content="A decade in healthcare tech, a jump into cybersecurity, and what AI actually changes. Plus a 2-minute demo.">
+  <meta property="og:url" content="https://aproductofboredom.uk/">
+  <meta property="og:image" content="https://aproductofboredom.uk/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="From hospital IT to the SOC: how I ended up building an AI security analyst">
+  <meta name="twitter:description" content="A decade in healthcare tech, a jump into cybersecurity, and what AI actually changes.">
+  <meta name="twitter:image" content="https://aproductofboredom.uk/og.jpg">
+
   <style>
+    :root {
+      --bg: #fbfaf8;
+      --surface: #ffffff;
+      --text: #1d1f24;
+      --muted: #6b6f7a;
+      --line: #e6e3de;
+      --accent: #2b6cb0;
+      --accent-soft: #e8f0fa;
+      --care: #2f9e8f;
+      --sec: #6c5ce7;
+      --on-accent: #ffffff;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121317;
+        --surface: #1a1c21;
+        --text: #eceef2;
+        --muted: #9a9eab;
+        --line: #2a2d34;
+        --accent: #7fb2ff;
+        --accent-soft: #1d2a3d;
+        --care: #4fd1bd;
+        --sec: #a29bfe;
+        --on-accent: #0d1117;
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
-      margin: 0;
-      overflow: hidden;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 18px/1.65 Charter, "Iowan Old Style", Georgia, serif;
     }
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
+    .sans { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    article { max-width: 680px; margin: 0 auto; padding: 40px 16px 80px; }
+
+    /* byline */
+    .byline { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%; flex: none;
+      display: grid; place-items: center; color: #fff; font: 700 20px/1 system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--care), var(--sec));
     }
-    video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50%; /* Adjust width as needed */
-      height: auto;
-      z-index: 1; /* Ensure the video is in front of the canvas */
+    .byline .name { font-weight: 600; font-size: 15px; }
+    .byline .meta { color: var(--muted); font-size: 14px; }
+
+    h1 { font: 800 clamp(30px, 6vw, 42px)/1.15 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: -.02em; margin: 0 0 14px; }
+    .standfirst { font-size: 21px; color: var(--muted); margin: 0 0 32px; }
+    h2 { font: 700 24px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 48px 0 12px; }
+    p { margin: 0 0 18px; }
+    a { color: var(--accent); }
+
+    .listen {
+      display: inline-flex; align-items: center; gap: 10px; margin: 0 0 36px;
+      padding: 10px 16px 10px 12px; border: 1px solid var(--line); border-radius: 999px;
+      background: var(--surface); color: var(--text); cursor: pointer; font-size: 14px; font-weight: 600;
     }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0; /* Ensure the canvas is behind the video */
+    .listen .dot { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-size: 12px; }
+
+    /* timeline */
+    .timeline { list-style: none; margin: 24px 0 0; padding: 0; position: relative; }
+    .timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+    .timeline li { position: relative; padding: 0 0 26px 34px; }
+    .timeline li::before {
+      content: ""; position: absolute; left: 0; top: 7px; width: 16px; height: 16px; border-radius: 50%;
+      background: var(--bg); border: 3px solid var(--care);
     }
+    .timeline li.sec::before { border-color: var(--sec); }
+    .timeline li.now::before { background: var(--sec); border-color: var(--sec); box-shadow: 0 0 0 5px color-mix(in srgb, var(--sec) 25%, transparent); }
+    .when { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+    .what { font-weight: 700; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 17px; margin: 2px 0 4px; }
+    .timeline p { font-size: 16px; color: var(--muted); margin: 0; }
+    .legend { display: flex; gap: 18px; font-size: 13px; color: var(--muted); margin-top: 6px; }
+    .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+    .legend .c::before { background: var(--care); }
+    .legend .s::before { background: var(--sec); }
+
+    blockquote {
+      margin: 28px 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--accent);
+      font-size: 22px; line-height: 1.45; font-style: italic;
+    }
+
+    /* the demo "video" */
+    .demo {
+      display: block; width: 100%; margin: 28px 0 8px; padding: 0; border: 0; cursor: pointer;
+      border-radius: 14px; overflow: hidden; position: relative; aspect-ratio: 16 / 9;
+      background: #0d1117; text-align: left; box-shadow: 0 10px 40px rgba(0,0,0,.18);
+    }
+    .demo .ui { position: absolute; inset: 0; padding: 14px; display: grid; grid-template-columns: 34% 1fr; gap: 10px; opacity: .85; }
+    .demo .col { display: flex; flex-direction: column; gap: 8px; }
+    .demo .card { border-radius: 6px; background: #161b22; border: 1px solid #263040; padding: 8px; }
+    .demo .bar { height: 7px; border-radius: 4px; background: #2d3748; margin: 5px 0; }
+    .demo .sev { display: inline-block; width: 36px; height: 7px; border-radius: 4px; }
+    .demo .hi { background: #e5534b; } .demo .md { background: #d4a72c; } .demo .lo { background: #3fb950; }
+    .demo .chat { flex: 1; }
+    .demo .chat .bar:nth-child(odd) { width: 70%; background: #3b3f86; }
+    .demo .chat .bar:nth-child(even) { width: 85%; margin-left: auto; }
+    .demo .play {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 76px; height: 76px; border-radius: 50%; background: rgba(255,255,255,.95);
+      display: grid; place-items: center; box-shadow: 0 6px 30px rgba(0,0,0,.4); transition: transform .15s;
+    }
+    .demo:hover .play { transform: translate(-50%, -50%) scale(1.07); }
+    .demo .play::after { content: ""; margin-left: 6px; border-left: 24px solid #111; border-top: 15px solid transparent; border-bottom: 15px solid transparent; }
+    .demo .tag {
+      position: absolute; left: 12px; bottom: 12px; color: #fff; font: 600 13px/1 system-ui, sans-serif;
+      background: rgba(0,0,0,.65); padding: 7px 10px; border-radius: 6px;
+    }
+    .demo .dur { left: auto; right: 12px; }
+    .caption { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 28px; }
+
+    .pill { display: inline-block; font: 600 13px/1 system-ui, sans-serif; padding: 6px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin: 0 6px 8px 0; }
+
+    .cta {
+      margin-top: 48px; padding: 24px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line);
+      display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+    }
+    .cta p { margin: 0; flex: 1 1 260px; font-size: 16px; }
+    .btn {
+      display: inline-block; padding: 13px 20px; border-radius: 10px; border: 0; cursor: pointer;
+      background: var(--accent); color: var(--on-accent); font: 600 15px/1 system-ui, sans-serif; text-decoration: none;
+    }
+    .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+    footer { margin-top: 48px; font-size: 14px; color: var(--muted); }
   </style>
 </head>
 <body>
-  <div id="container">
-    <canvas id="canvas"></canvas>
-    <video controls autoplay="autoplay" playsinlineeeeee loop="loop" name="rickrolled" type="video/mp4"> 
-      <source src="https://dn720407.ca.archive.org/0/items/rick-roll/Rick%20Roll.mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-  <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+  <article>
+    <div class="byline sans">
+      <div class="avatar" aria-hidden="true">Y</div>
+      <div>
+        <div class="name">Yakub</div>
+        <div class="meta">Head of Engineering · 6 min read</div>
+      </div>
+    </div>
 
-    // Set canvas size to fill the entire window
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    <h1>From hospital IT to the SOC: how I ended up building an AI security analyst</h1>
+    <p class="standfirst">A decade of making healthcare systems talk to each other turned out to be the best training for cybersecurity I could have asked for.</p>
 
-    // Create an array to store the particles
-    const particles = [];
+    <button class="listen sans trap" type="button"><span class="dot">▶</span> Listen to this article · 6:12</button>
 
-    // Function to create a particle
-    function createParticle() {
-      const particle = {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 6 + 1,
-        color: getRandomColor(),
-        speedX: Math.random() * 4 - 2, // Randomize speed in x direction
-        speedY: Math.random() * 4 - 2, // Randomize speed in y direction
-      };
-      particles.push(particle);
-    }
+    <p>People ask how someone goes from fixing printers in an emergency department to running engineering for a security operations centre. The honest answer is that I never really changed jobs. I just kept following the same problem into bigger rooms.</p>
 
-    // Function to generate random color in shades of cyan, turquoise, and blue
-    function getRandomColor() {
-      const colors = [
-        'rgba(0, 255, 255, 0.5)',  // Cyan
-        'rgba(64, 224, 208, 0.5)', // Turquoise
-        'rgba(30, 144, 255, 0.5)'  // Dodger Blue
-      ];
-      return colors[Math.floor(Math.random() * colors.length)];
-    }
+    <p>It started long before anyone paid me. From about 2004 I was the family's IT department: building PCs, overclocking things that probably shouldn't have been overclocked, and rescuing laptops. Some of you reading this were my first customers. I'm still on call, apparently.</p>
 
-    // Function to animate the particles
-    function animate() {
-      requestAnimationFrame(animate);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    <h2>The road so far</h2>
+    <div class="legend sans"><span class="c">Healthcare tech</span><span class="s">Cybersecurity</span></div>
+    <ol class="timeline sans">
+      <li>
+        <div class="when">2007 – 2012</div>
+        <div class="what">Volunteer everything</div>
+        <p>Community radio stations (transmitters, live streaming, backups), a local media studio, then the IT at two primary schools: Active Directory, Hyper-V, imaging whole labs of machines.</p>
+      </li>
+      <li>
+        <div class="when">2013 – 2015</div>
+        <div class="what">Hospital IT, the deep end</div>
+        <p>Applications specialist at a large NHS trust. Emergency department systems first, then radiology: PACS, RIS, dictation, and my first real taste of HL7 integration.</p>
+      </li>
+      <li>
+        <div class="when">2015</div>
+        <div class="what">On the road with the scanners</div>
+        <p>Field engineer keeping medical imaging equipment alive in hospitals across the UK, mostly the Linux, Solaris and network side.</p>
+      </li>
+      <li>
+        <div class="when">2017 – 2020</div>
+        <div class="what">Clinical systems and infrastructure</div>
+        <p>Clinical systems analyst and junior systems engineer at a national imaging provider. PACS expert, HL7 integration lead, patching, CAB, and the security audits that quietly changed my career.</p>
+      </li>
+      <li>
+        <div class="when">2020 – 2021</div>
+        <div class="what">Building the plumbing</div>
+        <p>Software engineering on an NHS eHospital integration platform, then HL7 and DICOM integrations for a global teleradiology company.</p>
+      </li>
+      <li class="sec">
+        <div class="when">2021</div>
+        <div class="what">The jump into security</div>
+        <p>Technical security consultant at a managed security provider. Incident response, 24/7 on-call, running analyst training and KQL workshops, and automating the MDR service wherever it would let me.</p>
+      </li>
+      <li class="sec now">
+        <div class="when">Now</div>
+        <div class="what">Head of Engineering</div>
+        <p>Building an AI-assisted SOC platform on Azure.</p>
+      </li>
+    </ol>
 
-      particles.forEach(particle => {
-        // Update particle position with slight randomness
-        particle.x += particle.speedX + (Math.random() - 0.5) * 0.5;
-        particle.y += particle.speedY + (Math.random() - 0.5) * 0.5;
+    <h2>The thread that runs through all of it</h2>
+    <p>Healthcare IT is a lesson in translation. Every scanner, every lab system, every patient record speaks its own dialect, and HL7 messages are how they shout at each other. My job for years was catching those messages, making sense of them, and making sure the right thing happened next. Miss one and a scan doesn't reach a radiologist.</p>
+    <p>Security turned out to be exactly the same problem with higher stakes. Firewalls, endpoints, identity platforms and cloud logs all speak different languages too. The SOC's job is to catch those signals, make sense of them, and act before the damage is done.</p>
 
-        // Draw particle
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
-        ctx.fill();
+    <blockquote>Normalise everything. Get the data right first and every clever thing you build on top gets easier.</blockquote>
 
-        // Check for boundary collision and adjust speed to create bouncing effect
-        if (particle.x + particle.radius > canvas.width || particle.x - particle.radius < 0) {
-          particle.speedX = -particle.speedX;
-        }
-        if (particle.y + particle.radius > canvas.height || particle.y - particle.radius < 0) {
-          particle.speedY = -particle.speedY;
-        }
-      });
-    }
+    <p>That was true for patient data and it's true for security telemetry. It's also, it turns out, the bit that makes AI genuinely useful rather than a gimmick.</p>
 
-    // Create initial particles
-    for (let i = 0; i < 150; i++) {
-      createParticle();
-    }
+    <h2>Where AI comes in</h2>
+    <p>A SOC analyst's day is mostly triage: reading an alert, pulling context from five different tools, deciding whether it matters. It's skilled work, but a lot of it is repetitive. I've spent enough nights on call to know how it feels at 3am.</p>
+    <p>So we're building a platform where every signal becomes a clean, consistent event, and an AI analyst works alongside the humans. It gathers the context, explains what it found and drafts a recommendation. The person stays firmly in charge of the decision.</p>
+    <p>
+      <span class="pill">Event-driven</span><span class="pill">Normalised data</span><span class="pill">Human in the loop</span><span class="pill">Azure</span>
+    </p>
+    <p>Easier to show than to explain, so here it is triaging a suspicious sign-in end to end:</p>
 
-    // Start animation
-    animate();
-  </script>
+    <button class="demo trap" type="button" aria-label="Play demo video">
+      <div class="ui" aria-hidden="true">
+        <div class="col">
+          <div class="card"><span class="sev hi"></span><div class="bar"></div><div class="bar" style="width:60%"></div></div>
+          <div class="card"><span class="sev md"></span><div class="bar"></div><div class="bar" style="width:75%"></div></div>
+          <div class="card"><span class="sev lo"></span><div class="bar"></div><div class="bar" style="width:50%"></div></div>
+          <div class="card"><span class="sev md"></span><div class="bar"></div><div class="bar" style="width:65%"></div></div>
+        </div>
+        <div class="card chat"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+      </div>
+      <span class="play" aria-hidden="true"></span>
+      <span class="tag">AI SOC analyst · live triage demo</span>
+      <span class="tag dur">2:14</span>
+    </button>
+    <div class="caption sans">Sound on for the full walkthrough.</div>
+
+    <h2>What I've learned</h2>
+    <p>You don't need to start in security to end up in security. Curiosity, a habit of asking "why did that happen?", and a stubborn streak count for more than any certificate.</p>
+    <p>And if you've ever had me fix your laptop over the phone on a Sunday: thank you. That was the apprenticeship.</p>
+
+    <div class="cta">
+      <p class="sans">Want the long version? It has every role, every system, and slightly too many acronyms.</p>
+      <a class="btn trap" href="#cv">Download my CV</a>
+    </div>
+
+    <footer class="sans">Yakub · aproductofboredom.uk</footer>
+  </article>
+
+  <script src="rickroll.js"></script>
+  <script>Rickroll.arm('.trap');</script>
 </body>
 </html>

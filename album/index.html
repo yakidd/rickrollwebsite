@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>📸 Shared album</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#14151a">
+
+  <!-- Link-preview bait (WhatsApp, iMessage, Messenger, Slack, Discord) -->
+  <meta name="description" content="24 photos shared with you. Tap to view the album.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Shared album">
+  <meta property="og:title" content="📸 24 photos shared with you">
+  <meta property="og:description" content="Tap to view the album">
+  <meta property="og:url" content="https://aproductofboredom.uk/album/">
+  <meta property="og:image" content="https://aproductofboredom.uk/album/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="📸 24 photos shared with you">
+  <meta name="twitter:description" content="Tap to view the album">
+  <meta name="twitter:image" content="https://aproductofboredom.uk/album/og.jpg">
+
+  <style>
+    :root {
+      --bg: #14151a;
+      --card: #1e2028;
+      --text: #f2f3f5;
+      --muted: #9a9daa;
+      --accent: #4f8cff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ---------- Bait: shared album ---------- */
+    #bait { max-width: 960px; margin: 0 auto; padding: 20px 16px 40px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .avatar {
+      width: 44px; height: 44px; border-radius: 50%; flex: none;
+      display: grid; place-items: center; font-weight: 700; font-size: 18px;
+      background: linear-gradient(135deg, #f2994a, #eb5757);
+    }
+    h1 { font-size: 22px; margin: 0; }
+    .meta { color: var(--muted); font-size: 14px; }
+    .grid {
+      display: grid; gap: 4px; border-radius: 14px; overflow: hidden;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 640px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    .tile {
+      aspect-ratio: 1; border: 0; padding: 0; cursor: pointer; position: relative;
+      overflow: hidden; background: var(--card);
+    }
+    .tile span {
+      position: absolute; inset: -12px;
+      filter: blur(9px) saturate(1.2);
+    }
+    .tile.video::after {
+      content: "▶"; position: absolute; inset: 0; display: grid; place-items: center;
+      font-size: 30px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.5);
+    }
+    .cta-wrap {
+      position: sticky; bottom: 0; padding: 18px 0 max(18px, env(safe-area-inset-bottom));
+      background: linear-gradient(transparent, var(--bg) 40%);
+    }
+    .cta {
+      display: block; width: 100%; max-width: 420px; margin: 0 auto;
+      padding: 16px; border: 0; border-radius: 12px; cursor: pointer;
+      background: var(--accent); color: #fff; font-family: inherit; font-size: 17px; font-weight: 600;
+      box-shadow: 0 6px 24px rgba(79, 140, 255, .35);
+    }
+    .cta:active { transform: scale(.98); }
+    .lock { text-align: center; color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+  </style>
+</head>
+<body>
+  <main id="bait">
+    <header>
+      <div class="avatar" id="initial">?</div>
+      <div>
+        <h1 id="album">Family photos</h1>
+        <div class="meta"><span id="from">Someone</span> shared <span id="count">24</span> items with you</div>
+      </div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="cta-wrap">
+      <button class="cta" id="open">View album</button>
+      <div class="lock">🔒 Shared privately: only people with the link can view</div>
+    </div>
+  </main>
+
+
+  <script src="../rickroll.js"></script>
+  <script>
+    // ---- Personalise the bait via URL: ?from=Mum&album=Christmas%202026&n=37
+    const q = new URLSearchParams(location.search);
+    const from = (q.get('from') || 'Someone').slice(0, 30);
+    const album = (q.get('album') || 'Family photos').slice(0, 50);
+    const count = Math.min(Math.max(parseInt(q.get('n'), 10) || 24, 4), 99);
+
+    document.getElementById('from').textContent = from;
+    document.getElementById('album').textContent = album;
+    document.getElementById('count').textContent = count;
+    document.getElementById('initial').textContent = from[0].toUpperCase();
+    document.title = '📸 ' + album;
+
+    // ---- Blurred "thumbnails": random gradients, a couple flagged as videos
+    const palette = ['#f2994a', '#eb5757', '#56ccf2', '#6fcf97', '#bb6bd9', '#f2c94c', '#2f80ed', '#e0a387', '#8d6e63'];
+    const pick = () => palette[Math.floor(Math.random() * palette.length)];
+    const grid = document.getElementById('grid');
+    // 12 fills both the 3- and 4-column layouts with no orphans
+    for (let i = 0; i < Math.min(count, 12); i++) {
+      const b = document.createElement('button');
+      b.className = 'tile' + (i === 2 || i === 7 ? ' video' : '');
+      b.setAttribute('aria-label', 'Photo ' + (i + 1));
+      const bg = document.createElement('span');
+      bg.style.background =
+        `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, ${pick()} 0 22%, transparent 45%),` +
+        `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, ${pick()} 0 30%, transparent 55%),` +
+        `linear-gradient(${Math.random() * 360}deg, ${pick()}, ${pick()})`;
+      b.appendChild(bg);
+      grid.appendChild(b);
+    }
+
+
+    Rickroll.arm('#bait button');
+  </script>
+</body>
+</html>

@@ -4,6 +4,9 @@
  *   <script src="rickroll.js"></script>
  *   <script>Rickroll.arm('.trap')</script>
  *
+ * To leave no escape, also call Rickroll.ambush(): any tap anywhere fires it,
+ * and if nobody taps it fires anyway, muted, with a TAP FOR SOUND prompt.
+ *
  * Video sources are tried in order: a copy in the repo, archive.org, then a
  * YouTube embed if every file fails or stalls.
  */
@@ -28,6 +31,13 @@
       opacity: 0; transition: opacity .6s; pointer-events: none; width: max-content; max-width: 90vw; }
     #rr .gotcha.on { opacity: 1; pointer-events: auto; }
     #rr .gotcha p { margin: 0 0 10px; font-size: clamp(20px, 5vw, 36px); font-weight: 800; text-shadow: 0 2px 12px #000; }
+    #rr .unmute { position: absolute; inset: 0; z-index: 2; display: none; place-items: center; border: 0; padding: 0;
+      background: transparent; cursor: pointer; }
+    #rr.muted .unmute { display: grid; }
+    #rr .unmute span { padding: 18px 26px; border-radius: 16px; background: rgba(0,0,0,.75); color: #fff;
+      font: 800 clamp(22px, 6vw, 40px)/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      box-shadow: 0 0 0 4px #fff; animation: rrpulse 1s ease-in-out infinite; }
+    @keyframes rrpulse { 50% { transform: scale(1.08); } }
     #rr .gotcha button { padding: 12px 20px; border: 0; border-radius: 999px; cursor: pointer; background: #fff; color: #000;
       font-family: inherit; font-size: 15px; font-weight: 600; }
   `;
@@ -48,6 +58,7 @@
       </video>
       <iframe title="video" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
       <canvas></canvas>
+      <button class="unmute" type="button"><span>🔇 TAP FOR SOUND</span></button>
       <div class="gotcha"><p>You just got rickrolled 🕺</p><button type="button">Pass it on</button></div>`;
     document.body.appendChild(el);
 
@@ -61,6 +72,8 @@
       if (!frame.src) video.play().catch(() => {});
     });
 
+    el.querySelector('.unmute').addEventListener('click', unmute);
+
     el.querySelector('.gotcha button').addEventListener('click', async () => {
       const url = location.href;
       try {
@@ -72,35 +85,55 @@
 
   function youtube() {
     if (frame.src) return;
-    frame.src = YOUTUBE;
+    frame.src = YOUTUBE + (el.classList.contains('muted') ? '&mute=1' : '');
     video.pause();
     video.style.display = 'none';
     frame.style.display = 'block';
   }
 
-  function spring(e) {
+  function fullscreen() {
+    const fs = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (fs) { try { const r = fs.call(el); if (r && r.catch) r.catch(() => {}); } catch (_) {} }
+  }
+
+  // muted: no tap yet, so browsers only allow silent playback and no fullscreen
+  function spring(e, { muted = false } = {}) {
     if (e) e.preventDefault();
     if (sprung) return;
     sprung = true;
 
     el.classList.add('on');
+    el.classList.toggle('muted', muted);
     el.removeAttribute('aria-hidden');
     document.title = 'Never gonna give you up';
 
     // play() must run synchronously inside the tap so browsers allow sound
-    video.muted = false;
+    video.muted = muted;
     video.volume = 1;
     const p = video.play();
     if (p && p.catch) p.catch(youtube);
     // a stalled load never rejects, so give it a deadline
     setTimeout(() => { if (video.currentTime === 0) youtube(); }, 5000);
 
-    const fs = el.requestFullscreen || el.webkitRequestFullscreen;
-    if (fs) { try { const r = fs.call(el); if (r && r.catch) r.catch(() => {}); } catch (_) {} }
+    if (!muted) fullscreen();
     if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
 
     confetti(el.querySelector('canvas'));
-    setTimeout(() => el.querySelector('.gotcha').classList.add('on'), 4000);
+    setTimeout(() => el.querySelector('.gotcha').classList.add('on'), muted ? 9000 : 4000);
+  }
+
+  // the reflex tap on a muted ambush: sound on, fullscreen
+  function unmute(e) {
+    if (e) e.preventDefault();
+    el.classList.remove('muted');
+    if (frame.src) {
+      // a cross-origin player can't be unmuted from here; reload it inside this tap
+      frame.src = YOUTUBE;
+    } else {
+      video.muted = false;
+      video.play().catch(() => {});
+    }
+    fullscreen();
   }
 
   function confetti(c) {
@@ -138,6 +171,18 @@
       document.addEventListener('click', e => {
         if (e.target.closest(selector)) spring(e);
       });
+    },
+    // any tap anywhere fires it; untouched, it fires muted after `after` ms
+    // or once the reader is `scroll` of the way down the page
+    ambush({ after = 8000, scroll = 0.4 } = {}) {
+      if (!el) build();
+      document.addEventListener('click', e => { if (!el.contains(e.target)) spring(e); });
+      const silent = () => spring(null, { muted: true });
+      setTimeout(silent, after);
+      addEventListener('scroll', () => {
+        const depth = (scrollY + innerHeight) / document.documentElement.scrollHeight;
+        if (depth >= scroll) silent();
+      }, { passive: true });
     },
     spring,
   };

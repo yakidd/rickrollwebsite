@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>From hospital IT to the SOC | Yakub</title>
+  <title>😳 I went from fixing hospital printers to building an AI that hunts hackers | Yakub</title>
   <meta name="robots" content="noindex, nofollow">
 
   <!-- Link-preview bait (WhatsApp, iMessage, Messenger, Slack, LinkedIn, Discord) -->
-  <meta name="description" content="How a decade of healthcare IT turned into building an AI-assisted security operations centre. Plus a 2-minute demo.">
+  <meta name="description" content="What it caught at 3am made me shut my laptop. #6 shocked my mum. Watch the 2-min video before it gets taken down.">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="aproductofboredom">
-  <meta property="og:title" content="From hospital IT to the SOC: how I ended up building an AI security analyst">
-  <meta property="og:description" content="A decade in healthcare tech, a jump into cybersecurity, and what AI actually changes. Plus a 2-minute demo.">
+  <meta property="og:title" content="I went from fixing hospital printers to building an AI that hunts hackers 😳">
+  <meta property="og:description" content="What it caught at 3am made me shut my laptop. #6 shocked my mum. Watch the 2-min video before it gets taken down.">
   <meta property="og:url" content="https://aproductofboredom.uk/">
   <meta property="og:image" content="https://aproductofboredom.uk/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="From hospital IT to the SOC: how I ended up building an AI security analyst">
-  <meta name="twitter:description" content="A decade in healthcare tech, a jump into cybersecurity, and what AI actually changes.">
+  <meta name="twitter:title" content="I went from fixing hospital printers to building an AI that hunts hackers 😳">
+  <meta name="twitter:description" content="What it caught at 3am made me shut my laptop. #6 shocked my mum. Watch the 2-min video before it gets taken down.">
   <meta name="twitter:image" content="https://aproductofboredom.uk/og.jpg">
 
   <style>
@@ -130,6 +130,7 @@
     .demo .tag {
       position: absolute; left: 12px; bottom: 12px; color: #fff; font: 600 13px/1 system-ui, sans-serif;
       background: rgba(0,0,0,.65); padding: 7px 10px; border-radius: 6px;
+      max-width: calc(100% - 90px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .demo .dur { left: auto; right: 12px; }
     .caption { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 28px; }
@@ -143,13 +144,66 @@
     .cta p { margin: 0; flex: 1 1 260px; font-size: 16px; }
     .btn {
       display: inline-block; padding: 13px 20px; border-radius: 10px; border: 0; cursor: pointer;
-      background: var(--accent); color: var(--on-accent); font: 600 15px/1 system-ui, sans-serif; text-decoration: none;
+      background: var(--accent); color: var(--on-accent); font: 600 15px/1.35 system-ui, sans-serif; text-decoration: none; text-align: center;
     }
     .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
     footer { margin-top: 48px; font-size: 14px; color: var(--muted); }
+
+    /* ---------- clickbait layer ---------- */
+    .breaking {
+      position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px; width: 100%;
+      padding: 10px 16px; border: 0; cursor: pointer; text-align: left;
+      background: #d92d20; color: #fff; font: 700 14px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .breaking .live { flex: none; background: #fff; color: #d92d20; padding: 3px 7px; border-radius: 4px; font-size: 12px; animation: blink 1.2s infinite; }
+    .breaking .go { margin-left: auto; flex: none; text-decoration: underline; }
+    @keyframes blink { 50% { opacity: .35; } }
+    .trending { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: -14px 0 24px; font-size: 14px; color: #d92d20; font-weight: 700; }
+    .trending span:last-child { color: var(--muted); font-weight: 600; }
+    .spoiler {
+      display: block; width: 100%; margin-top: 10px; padding: 12px 14px; border-radius: 10px; cursor: pointer; text-align: left;
+      border: 2px dashed var(--sec); background: color-mix(in srgb, var(--sec) 10%, transparent); color: var(--text);
+      font: 700 15px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .spoiler small { display: block; font-weight: 500; color: var(--muted); margin-top: 4px; filter: blur(3px); }
+    .demo .warn {
+      position: absolute; top: 12px; left: 12px; background: #d92d20; color: #fff; padding: 6px 9px; border-radius: 6px;
+      font: 800 12px/1 system-ui, sans-serif; letter-spacing: .03em; animation: blink 1.2s infinite;
+    }
+    .demo .views { position: absolute; top: 12px; right: 12px; color: #fff; background: rgba(0,0,0,.65); padding: 6px 9px; border-radius: 6px; font: 600 12px/1 system-ui, sans-serif; }
+    .ad {
+      display: flex; gap: 14px; align-items: center; width: 100%; margin: 28px 0; padding: 14px; cursor: pointer; text-align: left;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text);
+      font: 15px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .ad .thumb { flex: none; width: 96px; aspect-ratio: 16/10; border-radius: 8px; display: grid; place-items: center; font-size: 30px;
+      background: linear-gradient(135deg, #f2994a, #eb5757); }
+    .ad b { display: block; font-size: 16px; }
+    .ad small { color: var(--muted); }
+    .comments { margin-top: 48px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .comments h2 { margin-top: 0; }
+    .comment { display: flex; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px; }
+    .comment .av { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; }
+    .comment .who { font-weight: 700; } .comment .who small { color: var(--muted); font-weight: 500; }
+    .comment p { margin: 2px 0 6px; }
+    .comment button { border: 0; background: none; padding: 0; color: var(--accent); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .popup {
+      position: fixed; right: 16px; bottom: 16px; z-index: 60; width: min(300px, calc(100vw - 32px));
+      border-radius: 14px; overflow: hidden; background: #0d1117; color: #fff; box-shadow: 0 12px 40px rgba(0,0,0,.45);
+      transform: translateY(140%); transition: transform .5s cubic-bezier(.2,1.4,.4,1);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .popup.on { transform: none; }
+    .popup .vid { display: block; width: 100%; aspect-ratio: 16/9; border: 0; cursor: pointer; position: relative;
+      background: radial-gradient(circle at 30% 40%, #3b3f86, transparent 60%), radial-gradient(circle at 75% 60%, #d92d20, transparent 55%), #161b22; }
+    .popup .vid::after { content: "▶"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 34px; color: #fff; }
+    .popup p { margin: 0; padding: 10px 40px 12px 12px; font-size: 14px; font-weight: 700; }
+    .popup .x { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; border: 0; cursor: pointer;
+      background: rgba(0,0,0,.7); color: #fff; font-size: 16px; line-height: 1; }
   </style>
 </head>
 <body>
+  <button class="breaking trap" type="button"><span class="live">LIVE</span><span>The video I was asked to take down is still up. For now.</span><span class="go">Watch ▶</span></button>
   <article>
     <div class="byline sans">
       <div class="avatar" aria-hidden="true">Y</div>
@@ -159,8 +213,9 @@
       </div>
     </div>
 
-    <h1>From hospital IT to the SOC: how I ended up building an AI security analyst</h1>
-    <p class="standfirst">A decade of making healthcare systems talk to each other turned out to be the best training for cybersecurity I could have asked for.</p>
+    <div class="trending sans"><span>🔥 Trending #1</span><span><span id="readers">48,213</span> reading right now</span></div>
+    <h1>I went from fixing hospital printers to building an AI that hunts hackers. What it caught at 3am made me shut my laptop 😳</h1>
+    <p class="standfirst">Nobody tells you this about cybersecurity. A decade in healthcare IT, one career jump, and a 2-minute video I probably shouldn't be sharing.</p>
 
     <button class="listen sans trap" type="button"><span class="dot">▶</span> Listen to this article · 6:12</button>
 
@@ -168,7 +223,7 @@
 
     <p>It started long before anyone paid me. From about 2004 I was the family's IT department: building PCs, overclocking things that probably shouldn't have been overclocked, and rescuing laptops. Some of you reading this were my first customers. I'm still on call, apparently.</p>
 
-    <h2>The road so far</h2>
+    <h2>The 7 career moves that got me here (#6 shocked my mum)</h2>
     <div class="legend sans"><span class="c">Healthcare tech</span><span class="s">Cybersecurity</span></div>
     <ol class="timeline sans">
       <li>
@@ -200,6 +255,7 @@
         <div class="when">2021</div>
         <div class="what">The jump into security</div>
         <p>Technical security consultant at a managed security provider. Incident response, 24/7 on-call, running analyst training and KQL workshops, and automating the MDR service wherever it would let me.</p>
+        <button class="spoiler trap" type="button">😳 What actually happened on my first night on call<small>I got a phone call at 2:47am and the first thing they said was</small></button>
       </li>
       <li class="sec now">
         <div class="when">Now</div>
@@ -212,6 +268,8 @@
     <p>Healthcare IT is a lesson in translation. Every scanner, every lab system, every patient record speaks its own dialect, and HL7 messages are how they shout at each other. My job for years was catching those messages, making sense of them, and making sure the right thing happened next. Miss one and a scan doesn't reach a radiologist.</p>
     <p>Security turned out to be exactly the same problem with higher stakes. Firewalls, endpoints, identity platforms and cloud logs all speak different languages too. The SOC's job is to catch those signals, make sense of them, and act before the damage is done.</p>
 
+    <button class="ad trap" type="button"><span class="thumb">🤯</span><span><b>Hospital IT guy reveals the one message that can stop a scan reaching a doctor</b><small>Sponsored · 2:31 · ▶ Play</small></span></button>
+
     <blockquote>Normalise everything. Get the data right first and every clever thing you build on top gets easier.</blockquote>
 
     <p>That was true for patient data and it's true for security telemetry. It's also, it turns out, the bit that makes AI genuinely useful rather than a gimmick.</p>
@@ -222,7 +280,7 @@
     <p>
       <span class="pill">Event-driven</span><span class="pill">Normalised data</span><span class="pill">Human in the loop</span><span class="pill">Azure</span>
     </p>
-    <p>Easier to show than to explain, so here it is triaging a suspicious sign-in end to end:</p>
+    <p>Easier to show than to explain. I wasn't going to post this, but here's what it flagged at 3am. Watch to the end:</p>
 
     <button class="demo trap" type="button" aria-label="Play demo video">
       <div class="ui" aria-hidden="true">
@@ -235,10 +293,12 @@
         <div class="card chat"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
       </div>
       <span class="play" aria-hidden="true"></span>
-      <span class="tag">AI SOC analyst · live triage demo</span>
+      <span class="warn">⚠️ WATCH BEFORE IT'S DELETED</span>
+      <span class="views">1.2M views</span>
+      <span class="tag">The AI caught THIS at 3am… I wasn't ready 😳</span>
       <span class="tag dur">2:14</span>
     </button>
-    <div class="caption sans">Sound on for the full walkthrough.</div>
+    <div class="caption sans">🔊 Sound ON. Trust me.</div>
 
     <h2>What I've learned</h2>
     <p>You don't need to start in security to end up in security. Curiosity, a habit of asking "why did that happen?", and a stubborn streak count for more than any certificate.</p>
@@ -246,13 +306,39 @@
 
     <div class="cta">
       <p class="sans">Want the long version? It has every role, every system, and slightly too many acronyms.</p>
-      <a class="btn trap" href="#cv">Download my CV</a>
+      <a class="btn trap" href="#cv">Download my CV 👀 (page 2 is spicy)</a>
     </div>
+
+    <section class="comments">
+      <h2>Top comments</h2>
+      <div class="comment"><div class="av" style="background:#eb5757">M</div><div><div class="who">Mum <small>· 2h</small></div><p>Is this what you do on your laptop all day?? I KNEW IT 😭</p><button class="trap" type="button">▶ Watch the video she's talking about</button></div></div>
+      <div class="comment"><div class="av" style="background:#2f80ed">B</div><div><div class="who">Bro <small>· 5h</small></div><p>bro the bit at 1:47 😂😂 how is this legal</p><button class="trap" type="button">▶ Jump to 1:47</button></div></div>
+      <div class="comment"><div class="av" style="background:#6fcf97">A</div><div><div class="who">Auntie <small>· 1d</small></div><p>Still waiting for you to fix my printer beta. Very proud. Sharing with the family group 🙏</p><button class="trap" type="button">▶ See what the family group said (38 replies)</button></div></div>
+    </section>
 
     <footer class="sans">Yakub · aproductofboredom.uk</footer>
   </article>
 
   <script src="rickroll.js"></script>
-  <script>Rickroll.arm('.trap');</script>
+  <aside class="popup" id="popup" aria-label="Video">
+    <button class="vid trap" type="button" aria-label="Play video"></button>
+    <p>🔴 Yakub's 3am video is going viral</p>
+    <button class="x trap" type="button" aria-label="Close">✕</button>
+  </aside>
+
+  <script>
+    Rickroll.arm('.trap');
+
+    // live-ish reader count
+    const readers = document.getElementById('readers');
+    let n = 48213;
+    setInterval(() => { n += Math.floor(Math.random() * 40) - 8; readers.textContent = n.toLocaleString('en-GB'); }, 1500);
+
+    // the mini-player slides in after a few seconds or a bit of scrolling (and yes, the ✕ is a trap too)
+    const popup = document.getElementById('popup');
+    const show = () => popup.classList.add('on');
+    setTimeout(show, 7000);
+    addEventListener('scroll', () => { if (scrollY > innerHeight * 0.8) show(); }, { passive: true });
+  </script>
 </body>
 </html>
